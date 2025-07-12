@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // Force la page à être dynamique
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ function ConfirmPageInner() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("Confirmation en cours...");
-  const [supabase, setSupabase] = useState<any>(null);
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
 
   useEffect(() => {
     // Initialisation du client Supabase côté client uniquement
