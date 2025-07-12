@@ -19,9 +19,10 @@ export default function ConfirmPage() {
     const handleConfirmation = async () => {
       const token = searchParams.get('token');
       const type = searchParams.get('type');
+      const email = searchParams.get('email');
 
       // Attendre que les paramètres soient disponibles
-      if (!token || !type) {
+      if (!token || !type || !email) {
         return;
       }
 
@@ -29,7 +30,8 @@ export default function ConfirmPage() {
         // Vérifier le token OTP avec Supabase
         const { data, error } = await supabase.auth.verifyOtp({
           token: token,
-          type: type as any
+          type: 'email',
+          email: email
         });
 
         if (error) {
@@ -59,7 +61,7 @@ export default function ConfirmPage() {
   return (
     <div className="flex justify-center items-center min-h-screen font-sans text-lg text-center p-5">
       <div>
-        <h1 className="text-2xl font-bold mb-4">Confirmation d'inscription</h1>
+        <h1 className="text-2xl font-bold mb-4">Confirmation d&apos;inscription</h1>
         <p className={`${
           status === 'error' ? 'text-red-500' : 
           status === 'success' ? 'text-green-500' : 'text-blue-500'
