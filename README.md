@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Page de Confirmation d'Inscription - TeamUp
 
-## Getting Started
+Cette application Next.js permet de valider les inscriptions par email via Supabase.
 
-First, run the development server:
+## Installation
 
+1. **Installer les dépendances** :
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Configurer les variables d'environnement** :
+Créez un fichier `.env.local` à la racine du projet avec :
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configuration Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Allez sur [supabase.com](https://supabase.com)
+2. Créez un nouveau projet ou utilisez un projet existant
+3. Dans les paramètres du projet, récupérez :
+   - L'URL du projet (Settings > API)
+   - La clé anon/public (Settings > API)
 
-## Learn More
+## Utilisation
 
-To learn more about Next.js, take a look at the following resources:
+1. **Démarrer le serveur de développement** :
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Accéder à la page de confirmation** :
+```
+http://localhost:3000/confirm?token=xxx&type=xxx
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Fonctionnement
 
-## Deploy on Vercel
+La page `/confirm` :
+1. Récupère les paramètres `token` et `type` depuis l'URL
+2. Vérifie le token avec Supabase via `verifyOtp()`
+3. En cas de succès : redirige vers `myapp://onboarding?confirmed=true`
+4. En cas d'erreur : affiche "Lien invalide ou expiré"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Structure du projet
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/
+    confirm/
+      page.tsx    # Page de confirmation
+    layout.tsx    # Layout principal
+    page.tsx      # Page d'accueil
+```
+
+## Déploiement
+
+Pour déployer sur Vercel :
+1. Connectez votre repository GitHub
+2. Configurez les variables d'environnement dans Vercel
+3. Déployez automatiquement
+
+## Support
+
+Pour toute question, consultez la documentation Supabase ou contactez l'équipe de développement.
