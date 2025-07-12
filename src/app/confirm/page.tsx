@@ -4,19 +4,34 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialisation du client Supabase
-// Remplacez ces valeurs par vos propres clés Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Force la page à être dynamique
+export const dynamic = 'force-dynamic';
 
 export default function ConfirmPage() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Confirmation en cours...');
+  const [supabase, setSupabase] = useState<any>(null);
+
+  useEffect(() => {
+    // Initialisation du client Supabase côté client uniquement
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (supabaseUrl && supabaseAnonKey) {
+      const client = createClient(supabaseUrl, supabaseAnonKey);
+      setSupabase(client);
+    } else {
+      console.error('Variables d\'environnement Supabase manquantes');
+      setStatus('error');
+      setMessage('Configuration manquante');
+    }
+  }, []);
 
   useEffect(() => {
     const handleConfirmation = async () => {
+      if (!supabase) return;
+
       const token = searchParams.get('token');
       const type = searchParams.get('type');
       const email = searchParams.get('email');
@@ -56,7 +71,7 @@ export default function ConfirmPage() {
     };
 
     handleConfirmation();
-  }, [searchParams]);
+  }, [searchParams, supabase]);
 
   return (
     <div className="flex justify-center items-center min-h-screen font-sans text-lg text-center p-5">
